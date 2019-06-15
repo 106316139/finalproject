@@ -1,7 +1,7 @@
 # finalproject
 <html>
+<form>玩家:<input type="text" id="name" name="姓名"><br><br></form>
 <body>
-玩家:<input type="text" id="name"><br><br>
 <div id="div1" class="fa"></div>
 <canvas id="myCanvas" width=320 height=480 
  style="background:url('https://png.pngtree.com/thumb_back/fw800/background/20190222/ourmid/pngtree-sea-bottom-fish-seaweed-bubble-ocean-rat-painted-stone-background-material-image_49200.jpg');  background-size: 100%; height: 95% " 
@@ -21,9 +21,6 @@ function smile() {
       a.innerHTML = "&#xf11a;";
     }, 3000);
 }
-smile();
-setInterval(smile, 4000);
-
 function myFunction(x) {
     x.classList.toggle("fa-thumbs-down");
 }
@@ -68,27 +65,30 @@ function myFunction(x) {
      if (thing1.y >= thing2.y + thing2.MyImg.height || thing1.y + thing1.MyImg.height <= thing2.y) return false;
      return true;                                                                                            
      }
+     //進入遊戲
 function Got_Player_Input(MyEvent) {
    switch (game_mode) {
+   //開始
       case 'prestart': {
                         game_mode = 'running';
                         break;
                         } 
+  //中途
       case 'running': {
                         bird.velocity_y = jump_amount;
                         break;
-                        } 
+                        }
+  //結束回到開始的畫面
       case 'over': if (new Date() - time_game_last_running > 1000) {
                     reset_game();
-                    game_mode = 'running';
+                    game_mode = 'prestart';
                     break;
                     } 
        } 
    MyEvent.preventDefault();
-   }
- addEventListener("touchstart", Got_Player_Input);     
- addEventListener("mousedown", Got_Player_Input);     
- addEventListener("keydown", Got_Player_Input);     
+         } 
+ //滑鼠事件
+ addEventListener("mousedown", Got_Player_Input);
 function make_bird_slow_and_fall() {
     if (bird.velocity_y < max_fall_speed) {
          bird.velocity_y = bird.velocity_y + acceleration;    
@@ -98,6 +98,7 @@ function make_bird_slow_and_fall() {
          game_mode = 'over';
          }
     }
+    //綠色水管
 function add_pipe(x_pos, top_of_gap, gap_width) {             
     var top_pipe = new MySprite();
     top_pipe.MyImg = pipe_piece;                              
@@ -113,6 +114,7 @@ function add_pipe(x_pos, top_of_gap, gap_width) {
     bottom_pipe.velocity_x = pipe_speed;
     pipes.push(bottom_pipe );
     }
+    
 function make_bird_tilt_appropriately() {
     if (bird.velocity_y < 0)  {
                  bird.angle= -15;                   
@@ -130,12 +132,14 @@ function check_for_end_game() {
    for (var i=0; i < pipes.length; i++) 
      if (ImagesTouching(bird, pipes[i])) game_mode = "over";   
    }
+   //遊戲起始畫面
 function display_intro_instructions () {
    ctx.font= "25px Arial";
    ctx.fillStyle= "red";
    ctx.textAlign="center";
    ctx.fillText("Press, touch or click to start", myCanvas.width / 2, myCanvas.height / 4);  
    }
+   //遊戲結束
 function display_game_over () {
    var score = 0;                                             
    for (var i=0; i < pipes.length; i++) 
@@ -155,23 +159,24 @@ function display_bar_running_along_bottom() {
 function reset_game() {
       bird.y = myCanvas.height / 2;
       bird.angle= 0;
-      pipes=[];                           // erase all the pipes from the array
-      add_all_my_pipes();                 //and load them back in their starting positions 
+      pipes=[];                           //移除管子
+      add_all_my_pipes();                 //放回起始點 
       }
+      //水管位置
 function add_all_my_pipes() {
-    add_pipe(500,  100, 140);
-    add_pipe(800,   50, 140);
-    add_pipe(1000, 250, 140);
-    add_pipe(1200, 150, 120);
-    add_pipe(1600, 100, 120);
-    add_pipe(1800, 150, 120);
-    add_pipe(2000, 200, 120);
-    add_pipe(2200, 250, 120);
-    add_pipe(2400,  30, 100);
-    add_pipe(2700, 300, 100);
-    add_pipe(3000, 100,  80);
-    add_pipe(3300, 250,  80);
-    add_pipe(3600,  50,  60);
+    add_pipe(300,  100, 140);
+    add_pipe(500,   50, 140);
+    add_pipe(700, 250, 140);
+    add_pipe(900, 150, 120);
+    add_pipe(1100, 100, 120);
+    add_pipe(1300, 150, 120);
+    add_pipe(1500, 200, 120);
+    add_pipe(1700, 250, 120);
+    add_pipe(1900,  30, 100);
+    add_pipe(2100, 300, 100);
+    add_pipe(2300, 100,  80);
+    add_pipe(2500, 250,  80);
+    add_pipe(2700,  50,  60);
     var finish_line = new MySprite("http://s2js.com/img/etc/flappyend.png");
     finish_line.x = 3900;
     finish_line.velocity_x = pipe_speed;
